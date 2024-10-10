@@ -12,7 +12,7 @@
 
 ### Подключение к БД
 
-Диаграммы базы данных доступна по [ссылке](https://app.diagrams.net/#G1ZQoncETjqmug6cdLUAzpHt-bz4hGX0_h#%7B%22pageId%22%3A%22jUvzhdZfu6s5Q0PVnzj6%22%7D).
+Диаграмма базы данных доступна по [ссылке](https://app.diagrams.net/#G1ZQoncETjqmug6cdLUAzpHt-bz4hGX0_h#%7B%22pageId%22%3A%22jUvzhdZfu6s5Q0PVnzj6%22%7D).
 
 Для работы скрипта требуется подключиться к БД, для этого в корне проекта нужно создать файл **.env** и ввести актуальные данные для подключения к БД в следующем виде:
 

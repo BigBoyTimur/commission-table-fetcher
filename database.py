@@ -4,29 +4,21 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 class Database:
 
-    # Все данные для отображения метрик в таблице
-    # section_id для определения под какую секцую записывать метрику
-    selectMetricsSQL = """SELECT metric_number, 
-                       metric_subnumber, 
-                       md.description, 
-                       unit_of_measurement, 
-                       base_level, 
-                       average_level, 
-                       goal_level, 
-                       measurement_frequency, 
-                       conditions, 
-                       notes, 
-                       points, 
-                       section_id 
-                       FROM metric_descriptions AS md 
-                       JOIN sections AS s ON md.section_id = s.id 
-                       ORDER BY 1, 2"""
-
-    # Данные для формирования секций таблицы
-    selectSectionsSQL = """SELECT id, description FROM sections;"""
+    # SQL Запрос на все данные для отображения состава апелляционной комиссии в таблице
+    select_commission_members = """
+        SELECT 
+            CONCAT(ROW_NUMBER() OVER (ORDER BY e.employee_id), '.') AS No,
+            CONCAT(SUBSTRING(e.first_name, 1, 1), '.', SUBSTRING(e.surname, 1, 1), '. ', e.last_name) AS "Ф.И.О Эксперта",
+            r.role AS Должность
+        FROM 
+            CommissionMembers cm
+        JOIN 
+            Employees e ON cm.employee_id = e.employee_id
+        JOIN 
+            roles r ON e.role_id = r.role_id;
+    """
 
     # Логика подключения к БД
     _connection = None
@@ -55,20 +47,11 @@ class Database:
             print("Соединение с PostgreSQL закрыто")
             cls._connection = None
 
-    # Метод получения метрик
+    # Метод получения состава 
     @classmethod
-    def get_metrics(cls):
+    def get_commission_members(cls):
         with Database.get_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute(cls.selectMetricsSQL)
-                results = cursor.fetchall()
-                return results
-
-    # Метод подключения групп
-    @classmethod
-    def get_sections(cls):
-        with Database.get_connection() as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(cls.selectSectionsSQL)
+                cursor.execute(cls.select_commission_members)
                 results = cursor.fetchall()
                 return results

@@ -11,7 +11,6 @@ def set_border(ws, cell_range, need_to_thick, need_to_thick_up, need_to_thick_do
         for cell in row:
             if cell == row[len(row) - 1]:
                 cell.border = openpyxl.styles.Border(top=thin, left=thin, right=thick, bottom=thin)
-                cell.fill = openpyxl.styles.PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
             else:
                 cell.border = openpyxl.styles.Border(top=thin, left=thin, right=thin, bottom=thin)
         if len(need_to_thick) != 0:
@@ -53,6 +52,7 @@ def make_commission_excel():
         cell = ws.cell(row=1, column=col)
         cell.value = header
         cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
+        cell.font = openpyxl.styles.Font(bold=True)  # Полужирный шрифт
 
     # Заполнение данных
     for row_idx, row in enumerate(data, start=2):
@@ -60,11 +60,16 @@ def make_commission_excel():
             cell = ws.cell(row=row_idx, column=col_idx)
             cell.value = value
             cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
+            
+            # Включаем перенос текста для третьего столбца
+            if col_idx == 3:
+                cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center', wrap_text=True)
+                cell.fill = openpyxl.styles.PatternFill(start_color="FFFFFF", end_color="FFFFFF", fill_type="solid")  # Белая заливка
 
     # Установка ширины колонок
     ws.column_dimensions['A'].width = 5
-    ws.column_dimensions['B'].width = 30
-    ws.column_dimensions['C'].width = 100
+    ws.column_dimensions['B'].width = 40
+    ws.column_dimensions['C'].width = 30
 
     # Установка границ таблицы
     set_border(ws, f'A1:C{len(data) + 1}', [], [], [])

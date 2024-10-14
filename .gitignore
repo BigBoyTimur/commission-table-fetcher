@@ -1,4 +1,5 @@
 .env
+.env.local
 example.xlsx
 metrics.xlsx
 Метрики.xlsx
